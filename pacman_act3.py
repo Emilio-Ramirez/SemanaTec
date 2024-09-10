@@ -37,7 +37,7 @@ tiles = [
 ]
 
 def square(x, y):
-    "Draw square using path at (x, y)."
+    "Dibuja un cuadrado usando path en (x, y)."
     path.up()
     path.goto(x, y)
     path.down()
@@ -50,14 +50,14 @@ def square(x, y):
     path.end_fill()
 
 def offset(point):
-    "Return offset of point in tiles."
+    "Devuelve el índice del punto en tiles."
     x = (floor(point.x, 20) + 200) / 20
     y = (180 - floor(point.y, 20)) / 20
     index = int(x + y * 20)
     return index
 
 def valid(point):
-    "Return True if point is valid in tiles."
+    "Devuelve True si el punto es válido en tiles."
     index = offset(point)
 
     if tiles[index] == 0:
@@ -71,7 +71,7 @@ def valid(point):
     return point.x % 20 == 0 or point.y % 20 == 0
 
 def world():
-    "Draw world using path."
+    "Dibuja el mundo usando path."
     bgcolor('black')
     path.color('blue')
 
@@ -89,7 +89,7 @@ def world():
                 path.dot(2, 'white')
 
 def move():
-    "Move pacman and all ghosts."
+    "Mueve a Pacman y a todos los fantasmas."
     writer.undo()
     writer.write(state['score'])
 
@@ -111,19 +111,41 @@ def move():
     goto(pacman.x + 10, pacman.y + 10)
     dot(20, 'yellow')
 
+    # Mover a los fantasmas
     for point, course in ghosts:
         if valid(point + course):
             point.move(course)
         else:
+            # Opciones de movimiento
             options = [
                 vector(5, 0),
                 vector(-5, 0),
                 vector(0, 5),
                 vector(0, -5),
             ]
-            plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
+
+            # **Cambio para hacer los fantasmas más inteligentes**
+            # En lugar de elegir una dirección al azar, elegimos la dirección que
+            # acerque al fantasma a Pacman
+            best_option = None
+            min_distance = None
+
+            for option in options:
+                new_point = point + option
+                if valid(new_point):
+                    # Calcular la distancia a Pacman si el fantasma toma esta opción
+                    distance = (pacman - new_point).length()
+                    if min_distance is None or distance < min_distance:
+                        min_distance = distance
+                        best_option = option
+
+            if best_option is not None:
+                course.x = best_option.x
+                course.y = best_option.y
+            else:
+                # Si no hay opciones válidas, quedarse quieto
+                course.x = 0
+                course.y = 0
 
         up()
         goto(point.x + 10, point.y + 10)
@@ -131,6 +153,7 @@ def move():
 
     update()
 
+    # Comprobar si Pacman es atrapado por algún fantasma
     for point, course in ghosts:
         if abs(pacman - point) < 20:
             return
@@ -138,7 +161,7 @@ def move():
     ontimer(move, 100)
 
 def change(x, y):
-    "Change pacman aim if valid."
+    "Cambia la dirección de Pacman si es válida."
     if valid(pacman + vector(x, y)):
         aim.x = x
         aim.y = y
