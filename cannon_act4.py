@@ -48,6 +48,12 @@ def move():
         # Aumentado la gravedad para un movimiento más rápido
         speed.y -= 0.5
         ball.move(speed)
+    else:
+        # Reposiciona el balón en la ubicación inicial si sale de la pantalla
+        ball.x = -199
+        ball.y = -199
+        speed.x = 0
+        speed.y = 0
 
     dupe = targets.copy()
     targets.clear()
@@ -60,7 +66,10 @@ def move():
 
     for target in targets:
         if not inside(target):
-            return
+            # Reposicionar el target a la derecha cuando salga de la pantalla
+            target.x = 200
+            target.y = randrange(-150, 150)
+
 
     # Reducido el intervalo de tiempo para un movimiento más rápido
     ontimer(move, 25)
