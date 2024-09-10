@@ -1,14 +1,3 @@
-"""Paint, for drawing shapes.
-
-Exercises
-
-1. Add a color.
-2. Complete circle.
-3. Complete rectangle.
-4. Complete triangle.
-5. Add width parameter.
-"""
-
 from turtle import *
 
 from freegames import vector
@@ -38,7 +27,13 @@ def square(start, end):
 
 def circle(start, end):
     """Draw circle from start to end."""
-    pass  # TODO
+    up()
+    goto(start.x, start.y)
+    down()
+    begin_fill()
+    radius = (end.x - start.x) / 2  # Calcular el radio basado en las coordenadas
+    turtle_circle(radius)  # Dibujar el círculo
+    end_fill()
 
 
 def rectangle(start, end):
@@ -69,6 +64,32 @@ def store(key, value):
     state[key] = value
 
 
+def rectangle(start, end):
+    """Draw rectangle from start to end."""
+    up()
+    goto(start.x, start.y)
+    down()
+    begin_fill()
+    for _ in range(2):
+        forward(end.x - start.x)
+        left(90)
+        forward(end.y - start.y)
+        left(90)
+    end_fill()
+
+
+def triangle(start, end):
+    """Draw triangle from start to end."""
+    up()
+    goto(start.x, start.y)
+    down()
+    begin_fill()
+    for _ in range(3):
+        goto(end.x, end.y)
+        left(120)
+    end_fill()
+
+
 state = {"start": None, "shape": line}
 setup(420, 420, 370, 0)
 onscreenclick(tap)
@@ -79,6 +100,7 @@ onkey(lambda: color("white"), "W")
 onkey(lambda: color("green"), "G")
 onkey(lambda: color("blue"), "B")
 onkey(lambda: color("red"), "R")
+onkey(lambda: color("yellow"), "Y")  # Color amarillo
 onkey(lambda: store("shape", line), "l")
 onkey(lambda: store("shape", square), "s")
 onkey(lambda: store("shape", circle), "c")

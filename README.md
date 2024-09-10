@@ -60,3 +60,7 @@ Then recreate your virtual environment and reinstall packages.
 ## License
 
 [Add your license information here]
+
+Actividad 1:
+Añadí el color amarillo con la tecla "Y".
+Completé la función circle usando la función circle del módulo turtle para dibujar un círculo.
