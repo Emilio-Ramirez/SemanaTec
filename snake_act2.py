@@ -1,5 +1,5 @@
 from turtle import *
-from random import randrange
+from random import randrange, choice
 from freegames import square, vector
 
 food = vector(0, 0)
@@ -33,6 +33,13 @@ def move():
         food.y = randrange(-15, 15) * 10
     else:
         snake.pop(0)
+
+    # Mover la comida aleatoriamente
+    directions = [vector(10, 0), vector(-10, 0), vector(0, 10), vector(0, -10)]
+    new_food = food + choice(directions)
+    if inside(new_food):
+        food.x = new_food.x
+        food.y = new_food.y
 
     clear()
 
