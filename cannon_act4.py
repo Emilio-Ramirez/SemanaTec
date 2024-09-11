@@ -1,4 +1,5 @@
 from random import randrange
+from random import choice # Se agrega esta librería
 from turtle import *
 from freegames import vector
 
@@ -22,12 +23,31 @@ def draw():
     "Draw ball and targets."
     clear()
 
+    # Lista de formas posibles
+    shapes = ['circle', 'square', 'triangle']
+
     for target in targets:
         goto(target.x, target.y)
-        dot(20, 'blue')
+        shape = choice(shapes)  # Seleccionar una forma aleatoria
+
+        # Dibujar una forma dependiendo de la selección aleatoria
+        if shape == 'circle':
+            dot(20, 'blue')
+        elif shape == 'square':
+            begin_fill()
+            for _ in range(4):
+                forward(20)
+                left(90)
+            end_fill()
+        elif shape == 'triangle':
+            begin_fill()
+            for _ in range(3):
+                forward(20)
+                left(120)
+            end_fill()
 
     if inside(ball):
-        goto(ball.x, ball.y)
+        goto(ball.x, ball.y - 3)  # Ajuste leve para centrar mejor la pelota
         dot(6, 'red')
 
     update()
