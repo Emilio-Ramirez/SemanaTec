@@ -11,8 +11,9 @@ def tap(x, y):
     if not inside(ball):
         ball.x = -199
         ball.y = -199
-        speed.x = (x + 200) / 25
-        speed.y = (y + 200) / 25
+        # Aumentado la velocidad inicial del proyectil
+        speed.x = (x + 200) / 15
+        speed.y = (y + 200) / 15
 
 def inside(xy):
     "Return True if xy within screen."
@@ -40,11 +41,19 @@ def move():
         targets.append(target)
 
     for target in targets:
-        target.x -= 0.5
+        # Aumentado la velocidad de los balones
+        target.x -= 1
 
     if inside(ball):
-        speed.y -= 0.35
+        # Aumentado la gravedad para un movimiento más rápido
+        speed.y -= 0.5
         ball.move(speed)
+    else:
+        # Reposiciona el balón en la ubicación inicial si sale de la pantalla
+        ball.x = -199
+        ball.y = -199
+        speed.x = 0
+        speed.y = 0
 
     dupe = targets.copy()
     targets.clear()
@@ -57,9 +66,13 @@ def move():
 
     for target in targets:
         if not inside(target):
-            return
+            # Reposicionar el target a la derecha cuando salga de la pantalla
+            target.x = 200
+            target.y = randrange(-150, 150)
 
-    ontimer(move, 50)
+
+    # Reducido el intervalo de tiempo para un movimiento más rápido
+    ontimer(move, 25)
 
 setup(420, 420, 370, 0)
 hideturtle()
