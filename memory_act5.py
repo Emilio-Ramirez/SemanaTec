@@ -4,7 +4,7 @@ from freegames import path
 
 car = path('car.gif')
 tiles = list(range(32)) * 2
-state = {'mark': None}
+state = {'mark': None, 'taps': 0}  # Agregamos contador de taps
 hide = [True] * 64
 
 def square(x, y):
@@ -31,13 +31,20 @@ def tap(x, y):
     "Update mark and hidden tiles based on tap."
     spot = index(x, y)
     mark = state['mark']
-
+    
+    state['taps'] += 1  # Incrementamos el contador de taps
+    
     if mark is None or mark == spot or tiles[mark] != tiles[spot]:
         state['mark'] = spot
     else:
         hide[spot] = False
         hide[mark] = False
         state['mark'] = None
+    
+    # Verificamos si todos los cuadros han sido destapados
+    if all(not h for h in hide):
+        print("¡Felicidades! Has completado el juego.")
+        print(f"Número total de taps: {state['taps']}")
 
 def draw():
     "Draw image and tiles."
@@ -59,6 +66,12 @@ def draw():
         goto(x + 2, y)
         color('black')
         write(tiles[mark], font=('Arial', 30, 'normal'))
+    
+    # Mostramos el número de taps
+    up()
+    goto(-200, 200)
+    color('black')
+    write(f'Taps: {state["taps"]}', font=('Arial', 16, 'normal'))
 
     update()
     ontimer(draw, 100)
@@ -70,4 +83,3 @@ hideturtle()
 tracer(False)
 onscreenclick(tap)
 draw()
-done()
